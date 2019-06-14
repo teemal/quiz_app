@@ -3,6 +3,7 @@ import '../utils/questions.dart';
 import '../utils/quiz.dart';
 import '../UI/answer_button.dart';
 import '../UI/question_text.dart';
+import '../UI/correct_wrong_overlay.dart';
 
 class QuizPage extends StatefulWidget{
   @override
@@ -14,6 +15,7 @@ class QuizPageState extends State<QuizPage>{
   @override
   Widget build(BuildContext context){
     return new Stack(
+      fit: StackFit.expand,
       children: <Widget>[
         new Column( //this is our main page
           children: <Widget>[
@@ -21,7 +23,8 @@ class QuizPageState extends State<QuizPage>{
             new QuestionText("HA HA! Business! PUTA!", 1),
             new AnswerButton(false, () => print("You answered false"))
           ],
-        )
+        ),
+        new CorrectWrongOverlay(false)
       ],
     );
   }
