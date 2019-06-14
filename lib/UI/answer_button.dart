@@ -9,14 +9,20 @@ class AnswerButton extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return new Expanded( //true anf flase buttons
+    return new Expanded( //true and flase buttons
       child: new Material(
         color: _answer == true ? Colors.greenAccent : Colors.redAccent,
         child: new InkWell(
           onTap: () => _onTap(),
             child: new Center(
               child: new Container(
-                child: new Text(_answer == true ? "True" : "False"),
+                decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.white, width: 5.0)
+                ),
+                padding: new EdgeInsets.all(20.0),
+                child: new Text(_answer == true ? "True" : "False",
+                style: new TextStyle(color: Colors.white, fontSize: 40.0, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic),
+                ),
             ),
           ),
         ),
