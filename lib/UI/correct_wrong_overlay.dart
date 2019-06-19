@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 class CorrectWrongOverlay extends StatefulWidget{
   final bool _isCorrect;
-  CorrectWrongOverlay(this._isCorrect);
+  final VoidCallback _onTap;
+
+  CorrectWrongOverlay(this._isCorrect, this._onTap);
 
   @override
   State createState() => new CorrectWrongOverlayState();
@@ -22,11 +24,17 @@ class CorrectWrongOverlayState extends State<CorrectWrongOverlay>with SingleTick
   }
 
   @override
+  void dispose(){
+    _iconAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context){
     return new Material(
       color: Colors.black45,
       child: new InkWell(
-        onTap: () => print("You tapped the overlay"),
+        onTap: () => widget._onTap(),
         child: new Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

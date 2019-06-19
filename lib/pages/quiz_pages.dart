@@ -4,6 +4,7 @@ import '../utils/quiz.dart';
 import '../UI/answer_button.dart';
 import '../UI/question_text.dart';
 import '../UI/correct_wrong_overlay.dart';
+import './score_page.dart';
 
 class QuizPage extends StatefulWidget{
   @override
@@ -12,6 +13,34 @@ class QuizPage extends StatefulWidget{
 
 class QuizPageState extends State<QuizPage>{
 
+  Question currentQuestion;
+  Quiz quiz = new Quiz([
+    new Question("Zucc is human", false),
+    new Question("I love pizza?", true),
+    new Question("I like flutter", true)
+  ]);
+
+  String questionText;
+  int questionNumber;
+  bool isCorrect;
+  bool overlayIsVisible = false;
+
+  @override
+  void initState(){
+    super.initState();
+    currentQuestion = quiz.nextQuestion;
+    questionText = currentQuestion.question;
+    questionNumber = quiz.questionNumber;
+  }
+
+  void handleAnswer(bool answer){
+    isCorrect = (currentQuestion.answer == answer);
+    quiz.answer(isCorrect);
+    this.setState(() {
+      overlayIsVisible = true;
+    }); 
+  }
+
   @override
   Widget build(BuildContext context){
     return new Stack(
@@ -19,12 +48,26 @@ class QuizPageState extends State<QuizPage>{
       children: <Widget>[
         new Column( //this is our main page
           children: <Widget>[
-            new AnswerButton(true, () => print("You answered true")),
-            new QuestionText("HA HA! Business! PUTA!", 1),
-            new AnswerButton(false, () => print("You answered false"))
+            new AnswerButton(true, () => handleAnswer(true)),
+            new QuestionText(questionText, questionNumber),
+            new AnswerButton(false, () => handleAnswer(false))
           ],
         ),
-        new CorrectWrongOverlay(false)
+        overlayIsVisible == true ? new CorrectWrongOverlay(
+          isCorrect,
+          () {
+            if (quiz.length == questionNumber){
+              Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new ScorePage(quiz.score, quiz.length)), (Route route) => route == null);
+              return;
+            }
+            currentQuestion = quiz.nextQuestion;
+            this.setState(() {
+              overlayIsVisible = false;
+              questionText = currentQuestion.question;
+              questionNumber = quiz.questionNumber;
+            });
+          }
+          ) : new Container()
       ],
     );
   }
